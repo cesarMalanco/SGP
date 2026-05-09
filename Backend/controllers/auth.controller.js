@@ -8,7 +8,7 @@ const transporter = require("../config/email");
 
 const { User } = require("../models/User");
 
-// ===== FUNCIONES =====
+// ===== CONTROLADORES =====
 // Función para hacer login
 exports.login = async (req, res) => {
   try {

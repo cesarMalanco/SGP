@@ -3,12 +3,7 @@ const pool = require("../config/database");
 
 // ===== OBJETO USER =====
 const User = {
-  /**
-   * Busca un usuario por su correo electrónico
-   *
-   * @param {string} email - Correo electrónico del usuario
-   * @returns {Promise<Object|null>} - Retorna el usuario si se encuentra, o null si no existe
-   */
+  // Buscar usuario por email
   async findByEmail(email) {
     const [rows] = await pool.query(
       "SELECT * FROM users WHERE LOWER(email) = LOWER(?)",
@@ -18,12 +13,7 @@ const User = {
     return rows.length > 0 ? rows[0] : null;
   },
 
-  /**
-   * Busca un usuario por su nombre de usuario
-   *
-   * @param {string} username - Nombre de usuario usuario
-   * @returns {Promise<Object|null>} - Retorna el usuario si se encuentra, o null si no existe
-   */
+  // Buscar usuario por nombre de usuario
   async findByUsername(username) {
     const [rows] = await pool.query("SELECT * FROM users WHERE username = ?", [
       username,
@@ -32,21 +22,15 @@ const User = {
     return rows.length > 0 ? rows[0] : null;
   },
 
-  /**
-   * Busca un usuario por su ID
-   *
-   * @param {number} id - ID del usuario
-   * @returns {Promise<Object|null>} - Retorna el usuario si se encuentra, o null si no existe
-   */
+  // Buscar usuario por ID
   async findById(id) {
     const [rows] = await pool.query("SELECT * FROM users WHERE id = ?", [id]);
 
     return rows.length > 0 ? rows[0] : null;
   },
 
-  /**
-   * Hace el conteo de intentos fallidos de login
-   */
+
+  // Realizar conteo de intentos fallidos de login
   async updateLoginAttempts(email, failed_attempts, lock_until) {
     await pool.query(
       "UPDATE users SET failed_attempts = ?, lock_until = ? WHERE email = ?",
@@ -54,9 +38,7 @@ const User = {
     );
   },
 
-  /**
-   * Guarda el código de recuperación y su expiración
-   */
+  // Guardar el código de recuperación y su expiración
   async saveResetCode(email, code, expires) {
     await pool.query(
       "UPDATE users SET resetCode = ?, resetCodeExpires = ? WHERE LOWER(email) = LOWER(?)",
@@ -64,9 +46,7 @@ const User = {
     );
   },
 
-  /**
-   * Busca usuario por email y código de recuperación
-   */
+  // Buscar usuario por email y código de recuperación
   async findByEmailAndResetCode(email, code) {
     const [rows] = await pool.query(
       "SELECT * FROM users WHERE LOWER(email) = LOWER(?) AND resetCode = ?",
@@ -75,9 +55,7 @@ const User = {
     return rows.length > 0 ? rows[0] : null;
   },
 
-  /**
-   * Actualiza la contraseña y borra el código de recuperación
-   */
+  // Actualizar la contraseña y borra el código de recuperación
   async updatePasswordAndClearReset(email, hashedPassword) {
     await pool.query(
       "UPDATE users SET password = ?, resetCode = NULL, resetCodeExpires = NULL WHERE email = ?",
@@ -88,5 +66,5 @@ const User = {
 
 // ===== EXPORTACIÓN DEL MODELO =====
 module.exports = {
-  User,
+  User
 };
