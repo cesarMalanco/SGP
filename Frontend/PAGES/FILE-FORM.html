@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Expediente | IUSSEMPER PERICIAL</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <script src="https://kit.fontawesome.com/d90850e71e.js" crossorigin="anonymous"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../CSS/dashboard.css">
+    <link rel="stylesheet" href="../CSS/file-form.css">
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="brand-section">
+            <div class="logo-box">
+                <i class="fas fa-scale-balanced"></i>
+            </div>
+            <div>
+                <h2>IUSSEMPER</h2>
+                <span>PERICIAL</span>
+            </div>
+        </div>
+
+        <div class="online-user">
+            <div class="status-dot"></div>
+            <div>
+                <p class="mb-0 fw-semibold">Usuario en línea</p>
+                <small>Lic. {Nombre}</small>
+            </div>
+        </div>
+
+        <nav class="menu-options">
+            <a href="../PAGES/DASHBOARD.html" class="menu-card">
+                <i class="fas fa-chart-line"></i>
+                <span>Panel Principal</span>
+            </a>
+            <a href="#" class="menu-card">
+                <i class="fas fa-list-check"></i>
+                <span>Pendientes</span>
+            </a>
+            <a href="#" class="menu-card">
+                <i class="fas fa-calendar-days"></i>
+                <span>Calendario</span>
+            </a>
+            <a href="../PAGES/FILES.html" class="menu-card active">
+                <i class="fas fa-folder-open"></i>
+                <span>Expedientes</span>
+            </a>
+            <a href="#" class="menu-card">
+                <i class="fas fa-address-book"></i>
+                <span>Contactos</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="footer-btn support">
+                <i class="fa-regular fa-headphones"></i>
+                <span>Soporte Técnico</span>
+            </button>
+            <button class="footer-btn logout">
+                <i class="fa-solid fa-door-open"></i>
+                <span>Cerrar Sesión</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- PRINCIPAL CONTENT -->
+    <main class="main-content">
+        <div class="form-container">
+            <!-- TOPBAR -->
+            <div class="topbar">
+                <div>
+                    <h1 id="formTitle">Nuevo Expediente</h1>
+                    <p>Complete la información del expediente</p>
+                </div>
+                <div class="datetime-box">
+                    <i class="fas fa-clock"></i>
+                    <span id="datetime"></span>
+                </div>
+            </div>
+
+            <!-- FORM -->
+            <form id="expedienteForm" class="needs-validation" novalidate>
+                <input type="hidden" id="expId" value="">
+                
+                <!-- Section 1: Basic Information -->
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <i class="fas fa-folder-open"></i>
+                        <span>Información del Expediente</span>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label required-field">Número de Expediente</label>
+                            <input type="text" class="form-control form-control-custom" id="expNumero" required placeholder="Ej: EXP-2024-001">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label required-field">Juzgado</label>
+                            <select class="form-select form-control-custom" id="expJuzgado" required>
+                                <option value="">Seleccionar juzgado</option>
+                                <option value="Juzgado Civil">Juzgado Civil</option>
+                                <option value="Juzgado Penal">Juzgado Penal</option>
+                                <option value="Juzgado Laboral">Juzgado Laboral</option>
+                                <option value="Juzgado Familiar">Juzgado Familiar</option>
+                                <option value="Juzgado Mixto">Juzgado Mixto</option>
+                                <option value="Juzgado Administrativo">Juzgado Administrativo</option>
+                                <option value="Juzgado Constitucional">Juzgado Constitucional</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Título / Asunto</label>
+                            <input type="text" class="form-control form-control-custom" id="expTitulo" placeholder="Ej: Divorcio Voluntario - Pérez vs López">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Tipo de Juicio</label>
+                            <select class="form-select form-control-custom" id="expTipoJuicio">
+                                <option value="">Seleccionar tipo</option>
+                                <option value="civil">Civil</option>
+                                <option value="penal">Penal</option>
+                                <option value="laboral">Laboral</option>
+                                <option value="familiar">Familiar</option>
+                                <option value="mercantil">Mercantil</option>
+                                <option value="administrativo">Administrativo</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Área del Dictamen</label>
+                            <select class="form-select form-control-custom" id="expAreaDictamen">
+                                <option value="">Seleccionar área</option>
+                                <option value="pericial_contable">Pericial Contable</option>
+                                <option value="pericial_documental">Pericial Documental</option>
+                                <option value="pericial_ingenieria">Pericial Ingeniería</option>
+                                <option value="pericial_medicina">Pericial Medicina</option>
+                                <option value="pericial_informatica">Pericial Informática</option>
+                                <option value="pericial_valuacion">Pericial Valuación</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Estatus</label>
+                            <select class="form-select form-control-custom" id="expEstatus" required>
+                                <option value="activo">Activo</option>
+                                <option value="en_proceso">En Proceso</option>
+                                <option value="suspendido">Suspendido</option>
+                                <option value="concluido">Concluido</option>
+                                <option value="archivado">Archivado</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: parties involved -->
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <i class="fas fa-users"></i>
+                        <span>Partes Involucradas</span>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Nombre del Actor</label>
+                            <input type="text" class="form-control form-control-custom" id="expActor" placeholder="Nombre del demandante">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Nombre del Demandado</label>
+                            <input type="text" class="form-control form-control-custom" id="expDemandado" placeholder="Nombre del demandado">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Nombre del Licenciado</label>
+                            <input type="text" class="form-control form-control-custom" id="expLicenciado" placeholder="Nombre del abogado asignado">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: binnacle -->
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <i class="fas fa-history"></i>
+                        <span>Bitácora del Expediente</span>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="button" class="btn-bitacora" id="btnBitacora">
+                                Ver / Gestionar Bitácora
+                            </button>
+                            <small class="text-muted d-block mt-2">Registro de actividades, audiencias y documentos del expediente</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 4: Financial Information -->
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Información Financiera</span>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Total de Cobro</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" class="form-control form-control-custom" id="expTotalCobro" placeholder="0.00" step="0.01">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Restante</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" class="form-control form-control-custom" id="expRestante" placeholder="0.00" step="0.01">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="payment-info">
+                                <small class="text-muted">Información de pagos: Los montos registrados serán visibles en el detalle del expediente</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 5: Dates -->
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Fechas Importantes</span>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Fecha de Ingreso</label>
+                            <input type="date" class="form-control form-control-custom" id="expFechaIngreso">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Tipo de Cliente</label>
+                            <select class="form-select form-control-custom" id="expTipoCliente">
+                                <option value="particular">Particular</option>
+                                <option value="empresa">Empresa / Corporativo</option>
+                                <option value="gobierno">Entidad Gubernamental</option>
+                                <option value="organismo">Organismo Internacional</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="window.location.href='../PAGES/FILES.html'">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-save"></i> Guardar Expediente
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../JS/file-form.js"></script>
+    <script src="../JS/time&dateJS.js"></script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+.form-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Form sections */
+.form-section {
+    background: white;
+    border-radius: 28px;
+    padding: 1.8rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(179, 157, 219, 0.2);
+    transition: var(--transition);
+}
+
+.form-section:hover {
+    box-shadow: var(--shadow-md);
+}
+
+/* Titles */
+.form-section-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--purple-rich);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--purple-ghost);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-section-title i {
+    color: var(--purple-soft);
+    font-size: 1.2rem;
+}
+
+/* Labels */
+.form-label {
+    font-weight: 600;
+    color: var(--gray-dark);
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+}
+
+.required-field::after {
+    content: '*';
+    color: var(--error);
+    margin-left: 4px;
+}
+
+/* form fields */
+.form-control-custom {
+    border-radius: 16px;
+    border: 1.5px solid var(--purple-ghost);
+    padding: 0.7rem 1rem;
+    transition: var(--transition);
+    font-size: 0.9rem;
+}
+
+.form-control-custom:focus {
+    border-color: var(--purple-soft);
+    box-shadow: 0 0 0 3px rgba(126, 87, 181, 0.1);
+    outline: none;
+}
+
+/* Input group  */
+.input-group-text {
+    background: var(--purple-ghost);
+    border: 1.5px solid var(--purple-ghost);
+    border-radius: 16px 0 0 16px;
+    color: var(--purple-rich);
+    font-weight: 600;
+}
+
+.input-group .form-control-custom {
+    border-radius: 0 16px 16px 0;
+}
+
+.btn-bitacora {
+    background: linear-gradient(135deg, var(--purple-ghost), #F3E8FF);
+    border: 1.5px solid var(--purple-mist);
+    padding: 0.9rem 1rem;
+    border-radius: 16px;
+    font-weight: 600;
+    color: var(--purple-rich);
+    transition: var(--transition);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-bitacora:hover {
+    background: linear-gradient(135deg, var(--purple-mist), var(--purple-soft));
+    color: white;
+    transform: translateY(-2px);
+    border-color: transparent;
+}
+
+/* Payment info */
+.payment-info {
+    background: var(--purple-ghost);
+    border-radius: 20px;
+    padding: 1rem;
+    margin-top: 0.5rem;
+}
+
+.payment-info small {
+    font-size: 0.75rem;
+}
+
+/* Buttons */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+.btn-cancel {
+    background: transparent;
+    border: 1.5px solid var(--gray-medium);
+    padding: 0.7rem 1.8rem;
+    border-radius: 40px;
+    font-weight: 600;
+    color: var(--gray-mid);
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.btn-cancel:hover {
+    border-color: var(--error);
+    color: var(--error);
+    transform: translateY(-2px);
+}
+
+.btn-submit {
+    background: linear-gradient(135deg, var(--purple-rich), var(--purple-soft));
+    border: none;
+    padding: 0.7rem 2rem;
+    border-radius: 40px;
+    font-weight: 600;
+    color: white;
+    transition: var(--transition);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    background: linear-gradient(135deg, var(--purple-soft), var(--purple-rich));
+}
+
+.invalid-feedback-custom {
+    font-size: 0.75rem;
+    color: var(--error);
+    margin-top: 0.25rem;
+}
