@@ -102,6 +102,7 @@ const Case_File = {
     // Crear expediente
     async createCaseFile(
         caseFile_No,
+        internal_number,
         court,
         title,
         trial_type,
@@ -111,11 +112,13 @@ const Case_File = {
         remaining_balance,
         entry_date,
         client_type,
+        expert_role,	
     ) {
         const [result] = await pool.query(
-            "INSERT INTO case_files (case_number, court, title, trial_type, ruling_area, status, total_fee, remaining_balance, entry_date, client_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO case_files (case_number, internal_number, court, title, trial_type, ruling_area, status, total_fee, remaining_balance, entry_date, client_type, expert_role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
                 caseFile_No,
+                internal_number,
                 court,
                 title,
                 trial_type,
@@ -125,6 +128,7 @@ const Case_File = {
                 remaining_balance,
                 entry_date,
                 client_type,
+                expert_role,
             ]
         );
         return result.insertId;
@@ -133,6 +137,7 @@ const Case_File = {
     // Actualizar expediente
     async updateCaseFile(case_file_id, {
         caseFile_No,
+        internal_number,
         court,
         title,
         trial_type,
@@ -141,10 +146,12 @@ const Case_File = {
         total_fee,
         remaining_balance,
         entry_date,
-        client_type
+        client_type,
+        expert_role
     }) {
         const params = [
             caseFile_No,
+            internal_number,
             court,
             title,
             trial_type,
@@ -153,10 +160,11 @@ const Case_File = {
             total_fee,
             remaining_balance,
             entry_date,
-            client_type
+            client_type,
+            expert_role
         ];
 
-        let sql = `UPDATE case_files SET case_number = ?, court = ?, title = ?, trial_type = ?, ruling_area = ?, status = ?, total_fee = ?, remaining_balance = ?, entry_date = ?, client_type = ?`;
+        let sql = `UPDATE case_files SET case_number = ?, internal_number = ?, court = ?, title = ?, trial_type = ?, ruling_area = ?, status = ?, total_fee = ?, remaining_balance = ?, entry_date = ?, client_type = ?, expert_role = ?`;
 
         params.push(case_file_id);
         sql += ` WHERE case_file_id = ?`;

@@ -34,6 +34,7 @@ exports.createCaseFile = async (req, res) => {
     try {
         const {
             case_number,
+            internal_number,
             court,
             title,
             trial_type,
@@ -44,7 +45,8 @@ exports.createCaseFile = async (req, res) => {
             client_type,
             actor,
             demandado,
-            licenciado
+            licenciado,
+            expert_role,
         } = req.body;
 
         // Calcular saldo restante
@@ -52,8 +54,8 @@ exports.createCaseFile = async (req, res) => {
 
         // Crear expediente
         const caseId = await Case_File.createCaseFile(
-            case_number, court, title, trial_type, ruling_area, status,
-            total_fee, calculatedBalance, entry_date, client_type
+            case_number, internal_number, court, title, trial_type, ruling_area, status,
+            total_fee, calculatedBalance, entry_date, client_type, expert_role
         );
 
         // Crear contactos y relaciones
