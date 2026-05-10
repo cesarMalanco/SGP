@@ -3,6 +3,7 @@ const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const validator = require("validator");
+const pool = require("../config/database");
 
 const transporter = require("../config/email");
 

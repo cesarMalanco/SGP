@@ -3,6 +3,12 @@ const pool = require("../config/database");
 
 // ===== OBJETO PAYMENT =====
 const Payment = {
+    // Obtener pago por ID
+    async getById(payment_id) {
+        const [rows] = await pool.query("SELECT * FROM payment WHERE payment_id = ?", [payment_id]);
+        return rows[0]; 
+    },
+
     // Obtener pagos por expediente
     async getPaymentsByCase(case_file_id) {
         const [rows] = await pool.query("SELECT * FROM payment WHERE case_file_id = ?", [case_file_id]);

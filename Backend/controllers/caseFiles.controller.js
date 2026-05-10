@@ -2,6 +2,7 @@
 const { Case_File } = require("../models/CaseFile");
 const { Contact } = require("../models/Contact");
 const { NormalizationAuxiliar } = require("../models/NormalizationAuxiliar");
+const pool = require("../config/database");
 
 // ===== CONTROLADORES =====
 // Función para obtener todos los expedientes
@@ -39,7 +40,6 @@ exports.createCaseFile = async (req, res) => {
             ruling_area,
             status,
             total_fee,
-            remaining_balance,
             entry_date,
             client_type,
             actor,
@@ -47,10 +47,13 @@ exports.createCaseFile = async (req, res) => {
             licenciado
         } = req.body;
 
+        // Calcular saldo restante
+        const calculatedBalance = total_fee;
+
         // Crear expediente
         const caseId = await Case_File.createCaseFile(
             case_number, court, title, trial_type, ruling_area, status,
-            total_fee, remaining_balance, entry_date, client_type
+            total_fee, calculatedBalance, entry_date, client_type
         );
 
         // Crear contactos y relaciones

@@ -13,7 +13,7 @@ function verificarModoEdicion() {
 
     if (expedienteId) {
         cargarExpediente(expedienteId);
-        document.getElementById("formTitle").textContent ="Editar Expediente";
+        document.getElementById("formTitle").textContent = "Editar Expediente";
     }
 }
 
@@ -22,7 +22,7 @@ async function guardarExpediente(event) {
 
     // OBTENER DATOS DEL FORMULARIO
     const expediente = {
-        caseFile_No: document.getElementById("expNumero").value,
+        case_number: document.getElementById("expNumero").value,
         court: document.getElementById("expJuzgado").value,
         title: document.getElementById("expTitulo").value,
         trial_type: document.getElementById("expTipoJuicio").value,
@@ -32,13 +32,12 @@ async function guardarExpediente(event) {
         demandado: document.getElementById("expDemandado").value,
         licenciado: document.getElementById("expLicenciado").value,
         total_fee: parseFloat(document.getElementById("expTotalCobro").value) || 0,
-        remaining_balance: parseFloat(document.getElementById("expRestante").value) || 0,
         entry_date: document.getElementById("expFechaIngreso").value,
         client_type: document.getElementById("expTipoCliente").value
     };
 
     // VALIDACIÓN 
-    if (!expediente.caseFile_No || !expediente.court) {
+    if (!expediente.case_number || !expediente.court) {
         alert("Complete los campos obligatorios");
         return;
     }
@@ -102,8 +101,7 @@ async function cargarExpediente(id) {
         document.getElementById("expDemandado").value = expediente.demandado || "";
         document.getElementById("expLicenciado").value = expediente.licenciado || "";
         document.getElementById("expTotalCobro").value = expediente.total_fee || "";
-        document.getElementById("expRestante").value = expediente.remaining_balance || "";
-        document.getElementById("expFechaIngreso").value = expediente.entry_date ? expediente.entry_date.split("T")[0]: "";
+        document.getElementById("expFechaIngreso").value = expediente.entry_date ? expediente.entry_date.split("T")[0] : "";
         document.getElementById("expTipoCliente").value = expediente.client_type || "";
 
     } catch (error) {
