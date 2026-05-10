@@ -16,8 +16,8 @@ exports.getPaymentsByCase = async (req, res) => {
 // Función para crear un pago
 exports.createPayment = async (req, res) => {
     try {
-        const { case_file_id, date, concept, amount, payment_method, paid_by, receipt_no, actions } = req.body;
-        const paymentId = await Payment.createPayment(case_file_id, date, concept, amount, payment_method, paid_by, receipt_no, actions);
+        const { case_file_id, date, concept, amount, payment_method, paid_by, receipt_no } = req.body;
+        const paymentId = await Payment.createPayment(case_file_id, date, concept, amount, payment_method, paid_by, receipt_no);
         res.status(201).json({ message: "Pago creado", paymentId });
     } catch (error) {
         res.status(500).json({ error: error.message });

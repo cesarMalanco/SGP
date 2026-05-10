@@ -5,13 +5,97 @@ const pool = require("../config/database");
 const Case_File = {
     // Obtener todos los expedientes
     async getAllCaseFiles() {
-        const [rows] = await pool.query("SELECT * FROM case_files");
+
+        const [rows] = await pool.query(`
+
+            SELECT 
+                cf.*,
+
+                MAX(
+                    CASE
+                        WHEN type = 'actor'
+                        THEN c.name
+                    END
+                ) AS actor,
+
+                MAX(
+                    CASE
+                        WHEN type = 'defendant'
+                        THEN c.name
+                    END
+                ) AS demandado,
+
+                MAX(
+                    CASE
+                        WHEN type = 'lawyer'
+                        THEN c.name
+                    END
+                ) AS licenciado
+
+            FROM case_files cf
+
+            LEFT JOIN case_contact cc
+                ON cf.case_file_id = cc.case_file_id
+
+            LEFT JOIN contact c
+                ON cc.contact_id = c.contact_id
+
+            LEFT JOIN involved_party ip
+                ON c.contact_id = ip.contact_id
+
+            GROUP BY cf.case_file_id
+
+        `);
+
         return rows;
     },
 
     // Obtener expediente por ID
     async getCaseFileById(case_file_id) {
-        const [rows] = await pool.query("SELECT * FROM case_files WHERE case_file_id = ?", [case_file_id]);
+
+        const [rows] = await pool.query(`
+
+            SELECT 
+                cf.*,
+
+                MAX(
+                    CASE
+                        WHEN type = 'actor'
+                        THEN c.name
+                    END
+                ) AS actor,
+
+                MAX(
+                    CASE
+                        WHEN type = 'defendant'
+                        THEN c.name
+                    END
+                ) AS demandado,
+
+                MAX(
+                    CASE
+                        WHEN type = 'lawyer'
+                        THEN c.name
+                    END
+                ) AS licenciado
+
+            FROM case_files cf
+
+            LEFT JOIN case_contact cc
+                ON cf.case_file_id = cc.case_file_id
+
+            LEFT JOIN contact c
+                ON cc.contact_id = c.contact_id
+
+            LEFT JOIN involved_party ip
+                ON c.contact_id = ip.contact_id
+
+            WHERE cf.case_file_id = ?
+
+            GROUP BY cf.case_file_id
+
+        `, [case_file_id]);
+
         return rows[0] || null;
     },
 

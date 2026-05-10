@@ -10,11 +10,14 @@ const Payment = {
     },
 
     // Crear pago
-    async createPayment(case_file_id, date, concept, amount, payment_method, paid_by, receipt_no, actions) {
+    async createPayment(case_file_id, date, concept, amount, payment_method, paid_by, receipt_no) {
         const [result] = await pool.query(
-            "INSERT INTO payment (case_file_id, date, concept, amount, payment_method, paid_by, receipt_no, actions) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-            [case_file_id, date, concept, amount, payment_method, paid_by, receipt_no, actions]
+            `INSERT INTO payment 
+            (case_file_id, date, concept, amount, payment_method, paid_by, receipt_no)
+            VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [case_file_id, date, concept, amount, payment_method, paid_by, receipt_no]
         );
+
         return result.insertId;
     },
 

@@ -97,7 +97,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // Limpiar campos y redirigir a dashboard
             emailInput.value = "";
             passwordInput.value = "";
-            window.location.href = "/PAGES/DASHBOARD.html";
+            window.location.href = "../PAGES/DASHBOARD.html";
           } else {
             const data = await response.json();
             // Mostrar error del backend si existe

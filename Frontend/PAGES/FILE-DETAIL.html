@@ -68,7 +68,7 @@
                 <i class="fa-regular fa-headphones"></i>
                 <span>Soporte Técnico</span>
             </button>
-            <button class="footer-btn logout">
+            <button class="footer-btn logout" onclick="logout()">
                 <i class="fa-solid fa-door-open"></i>
                 <span>Cerrar Sesión</span>
             </button>
@@ -85,6 +85,9 @@
                     <p>Información completa del caso</p>
                 </div>
                 <div class="action-buttons">
+                    <button class="btn-delete-exp" id="btnEliminarExpediente">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
                     <button class="btn-edit-exp" id="btnEditarExpediente" >
                         <i class="fas fa-edit"></i> Editar Expediente
                     </button>
