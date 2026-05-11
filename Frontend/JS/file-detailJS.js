@@ -2,6 +2,18 @@ let currentExpediente = null;
 let expedienteId = null;
 let pagoEditandoId = null;
 
+const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+    }
+});
+
 // ========== FUNCIONES DE AUTENTICACIÓN ==========
 function getToken() {
     let token = localStorage.getItem("token");
@@ -267,7 +279,18 @@ async function editarPago(paymentId, data) {
 
 // ========== FUNCIÓN PARA ELIMINAR PAGO ==========
 async function eliminarPago(id) {
-    if (!confirm("¿Estás seguro de eliminar este pago?")) return;
+    const result = await Swal.fire({
+    title: "¿Eliminar pago?",
+    text: "Esta acción no se puede deshacer",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#7C3AED",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Sí, eliminar",
+    cancelButtonText: "Cancelar"
+});
+
+if (!result.isConfirmed) return;
 
     try {
         const response = await fetch(`http://localhost:3000/api/payments/${id}`, {
@@ -278,7 +301,10 @@ async function eliminarPago(id) {
         });
 
         if (response.status === 401) {
-            alert("Sesión expirada. Por favor, inicie sesión nuevamente.");
+            Toast.fire({
+                icon: "error",
+                title: "Sesión expirada. Por favor, inicie sesión nuevamente."
+            });
             logout();
             return;
         }
@@ -289,11 +315,17 @@ async function eliminarPago(id) {
         }
 
         await recargarExpedienteCompleto();
-        alert("Pago eliminado correctamente");
+        Toast.fire({
+            icon: "success",
+            title: "Pago eliminado correctamente"
+        });
         
     } catch (error) {
         console.error("Error al eliminar pago:", error);
-        alert("Error al eliminar pago: " + error.message);
+        Toast.fire({
+            icon: "error",
+            title: "Error al eliminar pago: " + error.message
+        });
     }
 }
 
@@ -339,7 +371,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }).then(response => {
         if (response.status === 401) {
-            alert("Sesión expirada. Por favor, inicie sesión nuevamente.");
+            Toast.fire({
+                icon: "error",
+                title: "Sesión expirada. Por favor, inicie sesión nuevamente."
+            });
             logout();
             return;
         }
@@ -371,12 +406,22 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         if (!data.date || !data.concept || !data.amount || !data.payment_method || !data.paid_by) {
-            alert("Por favor, complete todos los campos requeridos");
+            Swal.fire({
+                icon: "warning",
+                title: "Campos incompletos",
+                text: "Por favor, completa todos los campos requeridos antes de continuar.",
+                confirmButtonColor: "#7C3AED"
+            });
             return;
         }
 
         if (data.amount <= 0) {
-            alert("El monto debe ser mayor a 0");
+            Swal.fire({
+                icon: "warning",
+                title: "Monto inválido",
+                text: "El monto debe ser mayor a 0",
+                confirmButtonColor: "#7C3AED"
+            });
             return;
         }
 
@@ -411,13 +456,19 @@ document.addEventListener("DOMContentLoaded", () => {
             if (success) {
                 bootstrap.Modal.getInstance(document.getElementById("pagoModal")).hide();
                 await recargarExpedienteCompleto();
-                alert(pagoEditandoId ? "Pago actualizado correctamente" : "Pago agregado correctamente");
+                Toast.fire({
+                    icon: "success",
+                    title: pagoEditandoId ? "Pago actualizado correctamente" : "Pago agregado correctamente"
+                });
                 resetearModalACreacion();
             }
             
         } catch (error) {
             console.error("Error al guardar pago:", error);
-            alert("Error al guardar pago: " + error.message);
+            Toast.fire({
+                icon: "error",
+                title: "Error al guardar pago: " + error.message
+            });
         }
     });
 
@@ -579,8 +630,18 @@ function getAreaTexto(area) {
 }
 
 async function eliminarExpediente() {
-    const confirmar = confirm("¿Seguro que deseas eliminar este expediente?");
-    if (!confirmar) return;
+    const confirmar = await Swal.fire({
+        title: "¿Eliminar expediente?",
+        text: "Esta acción no se puede deshacer",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#7C3AED",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar"
+    });
+
+    if (!confirmar.isConfirmed) return;
 
     try {
         const response = await fetch(`http://localhost:3000/api/case-files/${expedienteId}`, {
@@ -599,11 +660,17 @@ async function eliminarExpediente() {
             throw new Error(data.error || "Error");
         }
 
-        alert("Expediente eliminado correctamente");
+        Toast.fire({
+            icon: "success",
+            title: "Expediente eliminado correctamente"
+        });
         window.location.href = "../PAGES/FILES.html";
 
     } catch (error) {
         console.error(error);
-        alert("Error al eliminar expediente: " + error.message);
+        Toast.fire({
+            icon: "error",
+            title: "Error al eliminar expediente"
+        });
     }
 }

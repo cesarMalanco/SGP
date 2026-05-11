@@ -1,6 +1,16 @@
 const API_URL = "http://localhost:3000/api/case-files";
 let expedienteId = null;
-
+const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+    }
+});
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("expedienteForm");
     form.addEventListener("submit", guardarExpediente);
@@ -41,7 +51,12 @@ async function guardarExpediente(event) {
 
     // VALIDACIÓN 
     if (!expediente.case_number || !expediente.court) {
-        alert("Complete los campos obligatorios");
+        Swal.fire({
+                icon: "warning",
+                title: "Campos incompletos",
+                text: "Por favor, completa todos los campos requeridos antes de continuar.",
+                confirmButtonColor: "#7C3AED"
+        });
         return;
     }
 
@@ -76,12 +91,18 @@ async function guardarExpediente(event) {
             throw new Error(data.error || "Error");
         }
 
-        alert("Expediente guardado correctamente");
+        Toast.fire({
+            icon: "success",
+            title: "Expediente guardado correctamente"
+        });
         // Redirigir
         window.location.href = "../PAGES/FILES.html";
     } catch (error) {
         console.error(error);
-        alert("Error al guardar expediente");
+        Toast.fire({
+            icon: "error",
+            title: "Error al guardar expediente"
+        });
     }
 }
 
@@ -111,6 +132,9 @@ async function cargarExpediente(id) {
         document.getElementById("expExpertRole").value = expediente.expert_role || "";
     } catch (error) {
         console.error(error);
-        alert("Error al cargar expediente");
+        Toast.fire({
+            icon: "error",
+            title: "Error al cargar expediente"
+        });
     }
 }
