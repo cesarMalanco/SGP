@@ -14,7 +14,7 @@ function getToken() {
 function isAuthenticated() {
     const token = getToken();
     if (!token) {
-        window.location.href = "../PAGES/LOGIN.html.html";
+        window.location.href = "../PAGES/LOGIN.html";
         return false;
     }
     return true;
@@ -27,7 +27,7 @@ function logout() {
     sessionStorage.removeItem("token");
     sessionStorage.removeItem("userName");
     sessionStorage.removeItem("userUsername");
-    window.location.href = "../PAGES/LOGIN.html.html";
+    window.location.href = "../PAGES/LOGIN.html";
 }
 
 // ========== FUNCIÓN PARA RECARGAR EXPEDIENTE ==========
@@ -445,8 +445,12 @@ function cargarInfoGeneral() {
     const container = document.getElementById("infoGeneral");
     container.innerHTML = `
         <div class="info-row">
-            <span class="info-label">Número:</span>
+            <span class="info-label">Número de expediente:</span>
             <span class="info-value">${currentExpediente.case_number || "N/A"}</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Número interno:</span>
+            <span class="info-value">${currentExpediente.internal_number || "N/A"}</span>
         </div>
         <div class="info-row">
             <span class="info-label">Título:</span>
@@ -481,8 +485,16 @@ function cargarInfoPartes() {
             <span class="info-value">${currentExpediente.demandado || "No especificado"}</span>
         </div>
         <div class="info-row">
-            <span class="info-label">Licenciado:</span>
-            <span class="info-value">${currentExpediente.licenciado || "No asignado"}</span>
+            <span class="info-label">Licenciado parte actora:</span>
+            <span class="info-value">${currentExpediente.lic_actor || "No asignado"}</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Licenciado parte demandada:</span>
+            <span class="info-value">${currentExpediente.lic_demandado || "No asignado"}</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Perito:</span>
+            <span class="info-value">${currentExpediente.expert_role || "No especificado"}</span>
         </div>
     `;
 }
@@ -520,29 +532,16 @@ function cargarInfoFinanciera() {
 
 function cargarInfoLegal() {
     const container = document.getElementById("infoLegal");
-    
-    function capitalizar(texto) {
-        if (!texto) return "No especificado";
-        return texto.charAt(0).toUpperCase() + texto.slice(1).toLowerCase();
-    }
-    
+
     function getAreaTexto(area) {
-        const areas = {
-            pericial_contable: "Pericial Contable",
-            pericial_documental: "Pericial Documental",
-            pericial_ingenieria: "Pericial Ingeniería",
-            pericial_medicina: "Pericial Medicina",
-            pericial_informatica: "Pericial Informática",
-            pericial_valuacion: "Pericial Valuación"
-        };
-        return areas[area] || capitalizar(area);
+        return area || "No especificado";
     }
     
     container.innerHTML = `
         <div class="info-row">
             <span class="info-label">Tipo de Juicio:</span>
             <span class="info-value">
-                ${capitalizar(currentExpediente.trial_type || "No especificado")}
+                ${currentExpediente.trial_type || "No especificado"}
             </span>
         </div>
 
@@ -576,15 +575,7 @@ function getEstatusTexto(estatus) {
 }
 
 function getAreaTexto(area) {
-    const areas = {
-        pericial_contable: "Pericial Contable",
-        pericial_documental: "Pericial Documental",
-        pericial_ingenieria: "Pericial Ingeniería",
-        pericial_medicina: "Pericial Medicina",
-        pericial_informatica: "Pericial Informática",
-        pericial_valuacion: "Pericial Valuación"
-    };
-    return areas[area] || area;
+    return area || "No especificado";
 }
 
 async function eliminarExpediente() {

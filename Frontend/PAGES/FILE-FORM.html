@@ -40,7 +40,7 @@
             <div class="status-dot"></div>
             <div>
                 <p class="mb-0 fw-semibold">Usuario en línea</p>
-                <small>Lic. {Nombre}</small>
+                <small id="user-name"></small>
             </div>
         </div>
 
@@ -107,50 +107,28 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label required-field">Número de Expediente</label>
-                            <input type="text" class="form-control form-control-custom" id="expNumero" required
-                                placeholder="Ej: EXP-2024-001">
+                            <input type="text" class="form-control form-control-custom" id="expNumero" placeholder="Ej: EXP-2024-001" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label required-field">Número interno del Expediente</label>
+                            <input type="text" class="form-control form-control-custom" id="expInternalNumber" placeholder="Ej: IUSP-2026-0001" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label required-field">Juzgado</label>
-                            <select class="form-select form-control-custom" id="expJuzgado" required>
-                                <option value="">Seleccionar juzgado</option>
-                                <option value="Juzgado Civil">Juzgado Civil</option>
-                                <option value="Juzgado Penal">Juzgado Penal</option>
-                                <option value="Juzgado Laboral">Juzgado Laboral</option>
-                                <option value="Juzgado Familiar">Juzgado Familiar</option>
-                                <option value="Juzgado Mixto">Juzgado Mixto</option>
-                                <option value="Juzgado Administrativo">Juzgado Administrativo</option>
-                                <option value="Juzgado Constitucional">Juzgado Constitucional</option>
-                            </select>
+                            <input type="text" class="form-control form-control-custom" id="expJuzgado"placeholder="Ej: Juzgado Primero Civil" required>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <label class="form-label">Título / Asunto</label>
                             <input type="text" class="form-control form-control-custom" id="expTitulo"
                                 placeholder="Ej: Divorcio Voluntario - Pérez vs López">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Tipo de Juicio</label>
-                            <select class="form-select form-control-custom" id="expTipoJuicio">
-                                <option value="">Seleccionar tipo</option>
-                                <option value="civil">Civil</option>
-                                <option value="penal">Penal</option>
-                                <option value="laboral">Laboral</option>
-                                <option value="familiar">Familiar</option>
-                                <option value="mercantil">Mercantil</option>
-                                <option value="administrativo">Administrativo</option>
-                            </select>
+                            <input type="text" class="form-control form-control-custom" id="expTipoJuicio" placeholder="Ej: Civil, Penal, Mercantil">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Área del Dictamen</label>
-                            <select class="form-select form-control-custom" id="expAreaDictamen">
-                                <option value="">Seleccionar área</option>
-                                <option value="pericial_contable">Pericial Contable</option>
-                                <option value="pericial_documental">Pericial Documental</option>
-                                <option value="pericial_ingenieria">Pericial Ingeniería</option>
-                                <option value="pericial_medicina">Pericial Medicina</option>
-                                <option value="pericial_informatica">Pericial Informática</option>
-                                <option value="pericial_valuacion">Pericial Valuación</option>
-                            </select>
+                            <input type="text" class="form-control form-control-custom" id="expAreaDictamen" placeholder="Ej: Pericial Informática">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Estatus</label>
@@ -179,13 +157,34 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Nombre del Demandado</label>
-                            <input type="text" class="form-control form-control-custom" id="expDemandado"
-                                placeholder="Nombre del demandado">
+                            <input type="text" class="form-control form-control-custom" id="expDemandado" placeholder="Nombre del demandado">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Licenciado de la parte actora</label>
+                            <input type="text" class="form-control form-control-custom" id="expLicActor" placeholder="Nombre del abogado asignado">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Licenciado de la parte demandada</label>
+                            <input type="text" class="form-control form-control-custom" id="expLicDemandado" placeholder="Nombre del abogado asignado">
                         </div>
                         <div class="col-md-12">
-                            <label class="form-label">Nombre del Licenciado</label>
-                            <input type="text" class="form-control form-control-custom" id="expLicenciado"
-                                placeholder="Nombre del abogado asignado">
+                            <label class="form-label">Tipo de Perito</label>
+                            
+                            <select class="form-select form-control-custom" id="expExpertRole">
+                                <option value="">Seleccione una opción</option>
+                                <option value="Perito de la Parte Demandada">
+                                    Perito de la Parte Demandada
+                                </option>
+                                <option value="Perito de la Parte Actora">
+                                    Perito de la Parte Actora
+                                </option>
+                                <option value="Tercero en Discordia">
+                                    Tercero en Discordia
+                                </option>
+                                <option value="Perito Oficial">
+                                    Perito Oficial
+                                </option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -243,13 +242,8 @@
                             <input type="date" class="form-control form-control-custom" id="expFechaIngreso">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Tipo de Cliente</label>
-                            <select class="form-select form-control-custom" id="expTipoCliente">
-                                <option value="particular">Particular</option>
-                                <option value="empresa">Empresa / Corporativo</option>
-                                <option value="gobierno">Entidad Gubernamental</option>
-                                <option value="organismo">Organismo Internacional</option>
-                            </select>
+                            <label class="form-label required-field">Tipo de Cliente</label>
+                            <input type="text" class="form-control form-control-custom" id="expTipoCliente" placeholder="Ej: Particular" required>
                         </div>
                     </div>
                 </div>

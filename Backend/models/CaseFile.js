@@ -27,10 +27,17 @@ const Case_File = {
 
                 MAX(
                     CASE
-                        WHEN type = 'lawyer'
+                        WHEN type = 'actor_lawyer'
                         THEN c.name
                     END
-                ) AS licenciado
+                ) AS lic_actor,
+
+                MAX(
+                    CASE
+                        WHEN type = 'defendant_lawyer'
+                        THEN c.name
+                    END
+                ) AS lic_demandado
 
             FROM case_files cf
 
@@ -74,10 +81,17 @@ const Case_File = {
 
                 MAX(
                     CASE
-                        WHEN type = 'lawyer'
+                        WHEN type = 'actor_lawyer'
                         THEN c.name
                     END
-                ) AS licenciado
+                ) AS lic_actor,
+
+                MAX(
+                    CASE
+                        WHEN type = 'defendant_lawyer'
+                        THEN c.name
+                    END
+                ) AS lic_demandado
 
             FROM case_files cf
 
@@ -101,7 +115,7 @@ const Case_File = {
 
     // Crear expediente
     async createCaseFile(
-        caseFile_No,
+        case_number,
         internal_number,
         court,
         title,
@@ -117,7 +131,7 @@ const Case_File = {
         const [result] = await pool.query(
             "INSERT INTO case_files (case_number, internal_number, court, title, trial_type, ruling_area, status, total_fee, remaining_balance, entry_date, client_type, expert_role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
-                caseFile_No,
+                case_number,
                 internal_number,
                 court,
                 title,
@@ -136,7 +150,7 @@ const Case_File = {
 
     // Actualizar expediente
     async updateCaseFile(case_file_id, {
-        caseFile_No,
+        case_number,
         internal_number,
         court,
         title,
@@ -150,7 +164,7 @@ const Case_File = {
         expert_role
     }) {
         const params = [
-            caseFile_No,
+            case_number,
             internal_number,
             court,
             title,

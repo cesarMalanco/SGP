@@ -31,17 +31,14 @@ async function cargarExpedientes() {
 
 
 function renderizarExpedientes() {
-    const container =document.getElementById("expedientesContainer");
-
-    const contador =document.getElementById("expCountDisplay");
-
-    const noResults =document.getElementById("noResultsMessage");
+    const container = document.getElementById("expedientesContainer");
+    const noResults = document.getElementById("noResultsMessage");
 
 
     // OBTENER FILTROS
     const numeroBusqueda =document.getElementById("searchNumero").value.toLowerCase();
     const nombreBusqueda =document.getElementById("searchNombre").value.toLowerCase();
-    const tipoCliente =document.getElementById("filterTipoCliente").value;
+    const tipoCliente = document.getElementById("filterTipoCliente").value.toLowerCase();
     const juzgado =document.getElementById("filterJuzgado").value;
 
     const estatus =document.getElementById("filterEstatus").value;
@@ -51,8 +48,9 @@ function renderizarExpedientes() {
     const filtrados = expedientesData.filter(exp => {
         const matchNumero =!numeroBusqueda ||exp.case_number?.toLowerCase().includes(numeroBusqueda);
         const matchNombre = !nombreBusqueda || exp.actor?.toLowerCase().includes(nombreBusqueda) || exp.demandado?.toLowerCase().includes(nombreBusqueda);
-        const matchTipo =!tipoCliente ||exp.client_type === tipoCliente;
-        const matchJuzgado =!juzgado ||exp.court === juzgado;
+        const textoTipoCliente = exp.client_type?.toLowerCase() || "";
+        const matchTipo = !tipoCliente || textoTipoCliente.includes(tipoCliente);
+        const matchJuzgado = !juzgado || exp.court?.toLowerCase().includes(juzgado.toLowerCase());   
         const matchEstatus =!estatus ||exp.status === estatus;
         return (
             matchNumero &&
@@ -65,7 +63,6 @@ function renderizarExpedientes() {
 
 
     container.innerHTML = "";
-    contador.textContent = filtrados.length;
 
     // NO HAY RESULTADOS
     if (filtrados.length === 0) {
@@ -107,7 +104,7 @@ function renderizarExpedientes() {
                             Tipo Cliente:
                         </span>
                         <span class="detail-value">
-                            ${getTipoClienteTexto(exp.client_type)}
+                            ${exp.client_type || "No especificado"}
                         </span>
                     </div>
 
@@ -156,8 +153,8 @@ function renderizarExpedientes() {
 function configurarFiltros() {
     document.getElementById("searchNumero").addEventListener("input", renderizarExpedientes);
     document.getElementById("searchNombre").addEventListener("input", renderizarExpedientes);
-    document.getElementById("filterTipoCliente").addEventListener("change", renderizarExpedientes);
-    document.getElementById("filterJuzgado").addEventListener("change", renderizarExpedientes);
+    document.getElementById("filterTipoCliente").addEventListener("input", renderizarExpedientes);
+    document.getElementById("filterJuzgado").addEventListener("input", renderizarExpedientes);
     document.getElementById("filterEstatus").addEventListener("change", renderizarExpedientes);
     document.getElementById("clearFiltersBtn").addEventListener("click", limpiarFiltros);
 }
@@ -175,17 +172,6 @@ function limpiarFiltros() {
 
 function verDetalle(id) {
     window.location.href =`../PAGES/FILE-DETAIL.html?id=${id}`;
-}
-
-
-function getTipoClienteTexto(tipo) {
-    const tipos = {
-        particular: "Particular",
-        empresa: "Empresa / Corporativo",
-        gobierno: "Entidad Gubernamental",
-        organismo: "Organismo Internacional"
-    };
-    return tipos[tipo] || "No especificado";
 }
 
 

@@ -45,7 +45,8 @@ exports.createCaseFile = async (req, res) => {
             client_type,
             actor,
             demandado,
-            licenciado,
+            lic_actor,
+            lic_demandado,
             expert_role,
         } = req.body;
 
@@ -71,11 +72,26 @@ exports.createCaseFile = async (req, res) => {
             await NormalizationAuxiliar.addCaseContact(caseId, defendantId);
         }
 
-        if (licenciado) {
-            const lawyerId = await Contact.ensureContact({ name: licenciado });
-            await Contact.createLawyer(lawyerId, null);
-            await NormalizationAuxiliar.ensureInvolvedParty(lawyerId, "lawyer");
-            await NormalizationAuxiliar.addCaseContact(caseId, lawyerId);
+        if (lic_actor) {
+            const lawyerActorId = await Contact.ensureContact({ name: lic_actor });
+            await Contact.createLawyer(lawyerActorId, null);
+            await NormalizationAuxiliar.ensureInvolvedParty(
+                lawyerActorId,
+                "actor_lawyer"
+            );
+
+            await NormalizationAuxiliar.addCaseContact(
+                caseId,
+                lawyerActorId
+            );
+        }
+
+        if (lic_demandado) {
+            const lawyerDefendantId = await Contact.ensureContact({name: lic_demandado});
+
+            await Contact.createLawyer(lawyerDefendantId, null);
+            await NormalizationAuxiliar.ensureInvolvedParty(lawyerDefendantId,"defendant_lawyer");
+            await NormalizationAuxiliar.addCaseContact(caseId,lawyerDefendantId);
         }
 
         res.status(201).json({ message: "Expediente creado", caseId });

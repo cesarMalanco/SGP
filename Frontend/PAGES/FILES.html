@@ -36,7 +36,7 @@
             <div class="status-dot"></div>
             <div>
                 <p class="mb-0 fw-semibold">Usuario en línea</p>
-                <small>Lic. {Nombre}</small>
+                <small id="user-name"></small>
             </div>
         </div>
 
@@ -93,8 +93,7 @@
         <div class="page-header">
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
                 <div>
-                    <h5 class="text-muted mb-1">Expedientes activos</h5>
-                    <h2 class="exp-count-display" id="expCountDisplay">0</h2>
+                    
                 </div>
                 <button class="btn-add-exp"  onclick="window.location.href='../PAGES/FILE-FORM.html'">
                     <i class="fas fa-plus-circle"></i>
@@ -118,33 +117,24 @@
                 <div class="col-md-6 col-lg-4">
                     <div class="search-box">
                         <i class="fas fa-user"></i>
-                        <input type="text" id="searchNombre" class="form-control form-control-custom" placeholder="Nombre (Actor o Demandado)...">
+                        <input type="text" id="searchNombre" class="form-control form-control-custom" placeholder="Nombre (Actor o Demandado)">
                     </div>
                 </div>
                 
                 <!-- Search by Client -->
                 <div class="col-md-6 col-lg-4">
-                    <select id="filterTipoCliente" class="form-select form-control-custom">
-                        <option value="">Tipos de cliente</option>
-                        <option value="particular">Particular</option>
-                        <option value="empresa">Empresa / Corporativo</option>
-                        <option value="gobierno">Entidad Gubernamental</option>
-                        <option value="organismo">Organismo Internacional</option>
-                    </select>
+                    <div class="search-box">
+                        <i class="fas fa-briefcase"></i>
+                        <input type="text" id="filterTipoCliente" class="form-control form-control-custom" placeholder="Tipo de cliente">
+                    </div>
                 </div>
                 
                 <!-- Filter by Court -->
                 <div class="col-md-6 col-lg-3">
-                    <select id="filterJuzgado" class="form-select form-control-custom">
-                        <option value="">Juzgados</option>
-                        <option value="Juzgado Civil">Juzgado Civil</option>
-                        <option value="Juzgado Penal">Juzgado Penal</option>
-                        <option value="Juzgado Laboral">Juzgado Laboral</option>
-                        <option value="Juzgado Familiar">Juzgado Familiar</option>
-                        <option value="Juzgado Mixto">Juzgado Mixto</option>
-                        <option value="Juzgado Administrativo">Juzgado Administrativo</option>
-                        <option value="Juzgado Constitucional">Juzgado Constitucional</option>
-                    </select>
+                    <div class="search-box">
+                        <i class="fas fa-gavel"></i>
+                        <input type="text" id="filterJuzgado" class="form-control form-control-custom" placeholder="Juzgado">
+                    </div>
                 </div>
                 
                 <!-- Search by Status -->

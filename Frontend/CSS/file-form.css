@@ -46,7 +46,7 @@
 
 .required-field::after {
     content: '*';
-    color: var(--error);
+    color: #EF4444;
     margin-left: 4px;
 }
 
