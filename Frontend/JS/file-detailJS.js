@@ -77,7 +77,7 @@ function actualizarResumenFinanciero() {
     if (!resumenContainer) return;
     
     const total = parseFloat(currentExpediente.total_fee) || 0;
-    const restante = parseFloat(currentExpediente.remaining_balance) || 0;
+    const restante = currentExpediente.remaining_balance !== null && currentExpediente.remaining_balance !== undefined ? parseFloat(currentExpediente.remaining_balance) : total;
     const pagado = total - restante;
     
     resumenContainer.innerHTML = `
@@ -553,7 +553,7 @@ function cargarInfoPartes() {
 function cargarInfoFinanciera() {
     const container = document.getElementById("infoFinanciera");
     const total = parseFloat(currentExpediente.total_fee) || 0;
-    const restante = parseFloat(currentExpediente.remaining_balance) || 0;
+    const restante = currentExpediente.remaining_balance !== null && currentExpediente.remaining_balance !== undefined ? parseFloat(currentExpediente.remaining_balance) : total;
     const pagado = total - restante;
 
     container.innerHTML = `

@@ -11,6 +11,17 @@ const Toast = Swal.mixin({
         toast.onmouseleave = Swal.resumeTimer;
     }
 });
+
+function getToken() {
+    let token = localStorage.getItem("token");
+
+    if (!token) {
+        token = sessionStorage.getItem("token");
+    }
+
+    return token;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("expedienteForm");
     form.addEventListener("submit", guardarExpediente);
@@ -69,7 +80,8 @@ async function guardarExpediente(event) {
             response = await fetch(`${API_URL}/${expedienteId}`, {
                 method: "PUT",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${getToken()}`
                 },
                 body: JSON.stringify(expediente)
             });
@@ -78,7 +90,8 @@ async function guardarExpediente(event) {
             response = await fetch(API_URL, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${getToken()}`
                 },
                 body: JSON.stringify(expediente)
             });
