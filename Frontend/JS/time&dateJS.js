@@ -6,10 +6,29 @@ document.addEventListener("DOMContentLoaded", () => {
             `${usuarioGuardado}`;
     }
 
+    // Función para cerrar sesión
+    document.querySelector(".logout").addEventListener("click", () => {
+        Swal.fire({
+            title: "¿Cerrar sesión?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sí, salir",
+            cancelButtonText: "Cancelar"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = "../PAGES/login.html";
+            }
+        });
+    });
+
 });
 
 function updateDateTime(){
+    const el = document.getElementById("datetime");
 
+    if (!el) return;
     const fecha = new Date();
 
     const opciones = {

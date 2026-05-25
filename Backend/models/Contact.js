@@ -1,12 +1,31 @@
-// ===== DEPENDENCIAS Y CONFIGURACIÓN =====
 const pool = require("../config/database");
 
-// ===== OBJETO CONTACT =====
+// OBJETO CONTACT 
 const Contact = {
     // Obtener todos los contactos
-    async getAllContacts() {
-        const [rows] = await pool.query("SELECT * FROM contact");
+async getAllContacts() {
+    const [rows] = await pool.query(`
+        SELECT c.contact_id, c.name, c.address, c.phone, c.category,
+        GROUP_CONCAT(DISTINCT ip.type SEPARATOR ', ') AS roles,
+        GROUP_CONCAT(DISTINCT cf.internal_number SEPARATOR ', ') AS expedientes
+
+        FROM contact c
+        LEFT JOIN involved_party ip
+        ON c.contact_id = ip.contact_id
+
+        LEFT JOIN case_contact cc
+        ON c.contact_id = cc.contact_id
+
+        LEFT JOIN case_files cf
+        ON cc.case_file_id = cf.case_file_id
+
+        GROUP BY c.contact_id
+
+        ORDER BY c.contact_id
+        `);
+
         return rows;
+
     },
 
     // Obtener contacto por ID
@@ -19,27 +38,19 @@ const Contact = {
     },
 
     // Crear contacto
-    async createContact({ name, address = null, phone = null }) {
+    async createContact({ name, address = null, phone = null, category = null }) {
         const [result] = await pool.query(
-            "INSERT INTO contact (name, address, phone) VALUES (?, ?, ?)",
-            [name, address, phone]
+            "INSERT INTO contact (name, address, phone, category) VALUES (?, ?, ?, ?)",
+            [name, address, phone, category]
         );
         return result.insertId;
     },
 
-    // Crear registro de abogado
-    async createLawyer(contact_id, office = null) {
-        await pool.query(
-            "INSERT INTO lawyer (contact_id, office) VALUES (?, ?)",
-            [contact_id, office]
-        );
-    },
-
     // Actualizar contacto
-    async updateContact(contact_id, { name, address, phone }) {
+    async updateContact(contact_id, { name, address, phone, category }) {
         await pool.query(
-            "UPDATE contact SET name = ?, address = ?, phone = ? WHERE contact_id = ?",
-            [name, address, phone, contact_id]
+            "UPDATE contact SET name = ?, address = ?, phone = ?, category = ? WHERE contact_id = ?",
+            [name, address, phone, category, contact_id]
         );
         return contact_id;
     },
@@ -51,23 +62,29 @@ const Contact = {
     },
 
     // Buscar contacto existente
-    async findContact(name, phone) {
-        const [rows] = await pool.query(
-            `SELECT * FROM contact WHERE name = ? AND phone = ? LIMIT 1`,
-            [name, phone]
+    async findContact(name) {
+        const [rows] =await pool.query(
+            `
+            SELECT *
+            FROM contact
+            WHERE LOWER(TRIM(name)) = LOWER(TRIM(?)) LIMIT 1`, [name]
         );
+
         return rows[0] || null;
+
     },
 
     // Validar contacto antes de crear uno nuevo
-    async ensureContact({ name, address = null, phone = null }) {
-        const existing = await Contact.findContact(name, phone);
-        if (existing) return existing.contact_id;
-        return await Contact.createContact({ name, address, phone });
-    }
+    async ensureContact({name, address=null,phone=null,category=null}) {
+        const existing = await Contact.findContact(name);
+        if(existing){
+            return existing.contact_id;
+        }
+        return await Contact.createContact({name,address,phone,category});
+        },
 }
 
-// ===== EXPORTACIÓN DEL MODELO =====
+//  EXPORTAR  
 module.exports = {
     Contact
 };

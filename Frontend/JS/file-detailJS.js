@@ -14,7 +14,7 @@ const Toast = Swal.mixin({
     }
 });
 
-// ========== FUNCIONES DE AUTENTICACIÓN ==========
+// FUNCIONES DE AUTENTICACIÓN 
 function getToken() {
     let token = localStorage.getItem("token");
     if (!token) {
@@ -42,7 +42,7 @@ function logout() {
     window.location.href = "../PAGES/LOGIN.html";
 }
 
-// ========== FUNCIÓN PARA RECARGAR EXPEDIENTE ==========
+// FUNCIÓN PARA RECARGAR EXPEDIENTE
 async function recargarExpedienteCompleto() {
     try {
         const response = await fetch(`http://localhost:3000/api/case-files/${expedienteId}`, {
@@ -71,7 +71,7 @@ async function recargarExpedienteCompleto() {
     }
 }
 
-// ========== ACTUALIZAR RESUMEN FINANCIERO ==========
+// ACTUALIZAR RESUMEN FINANCIERO
 function actualizarResumenFinanciero() {
     const resumenContainer = document.getElementById("pagosResumen");
     if (!resumenContainer) return;
@@ -91,7 +91,7 @@ function actualizarResumenFinanciero() {
     `;
 }
 
-// ========== CARGAR PAGOS CON BOTONES DE EDITAR Y ELIMINAR ==========
+// CARGAR PAGOS CON BOTONES DE EDITAR Y ELIMINAR 
 async function cargarPagos() {
     try {
         const token = getToken();
@@ -144,7 +144,6 @@ async function cargarPagos() {
             const monto = parseFloat(p.amount);
             totalPagado += monto;
             
-            // Determinar clase para el método de pago
             let metodoClass = "pago-badge ";
             switch(p.payment_method?.toLowerCase()) {
                 case "efectivo": metodoClass += "pago-efectivo"; break;
@@ -198,7 +197,7 @@ async function cargarPagos() {
     }
 }
 
-// ========== ABRIR MODAL PARA EDITAR PAGO ==========
+// ABRIR MODAL PARA EDITAR PAGO 
 async function abrirModalEditarPago(paymentId) {
     try {
         const token = getToken();
@@ -245,7 +244,7 @@ async function abrirModalEditarPago(paymentId) {
     }
 }
 
-// ========== FUNCIÓN PARA EDITAR PAGO ==========
+// FUNCIÓN PARA EDITAR PAGO 
 async function editarPago(paymentId, data) {
     try {
         const token = getToken();
@@ -277,7 +276,7 @@ async function editarPago(paymentId, data) {
     }
 }
 
-// ========== FUNCIÓN PARA ELIMINAR PAGO ==========
+// FUNCIÓN PARA ELIMINAR PAGO 
 async function eliminarPago(id) {
     const result = await Swal.fire({
     title: "¿Eliminar pago?",
@@ -329,7 +328,7 @@ if (!result.isConfirmed) return;
     }
 }
 
-// ========== RESETEAR MODAL A ESTADO DE CREACIÓN ==========
+// RESETEAR MODAL A ESTADO DE CREACIÓn
 function resetearModalACreacion() {
     pagoEditandoId = null;
     const modalTitle = document.querySelector("#pagoModal .modal-title");
@@ -343,7 +342,7 @@ function resetearModalACreacion() {
     document.getElementById("pagoForm").reset();
 }
 
-// ========== CONFIGURACIÓN INICIAL ==========
+// CONFIGURACIÓN INICIAL 
 document.addEventListener("DOMContentLoaded", () => {
     if (!isAuthenticated()) return;
     
@@ -491,7 +490,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// ========== FUNCIONES EXISTENTES ==========
+// FUNCIONES EXISTENTES 
 function cargarInfoGeneral() {
     const container = document.getElementById("infoGeneral");
     container.innerHTML = `

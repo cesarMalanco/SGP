@@ -6,6 +6,7 @@ const app = express();
 const authRoutes = require("./routes/auth.routes.js");
 const caseFilesRoutes = require("./routes/caseFiles.routes.js");
 const paymentsRoutes = require("./routes/payments.routes");
+const contactRoutes = require("./routes/contact.routes");
 const PORT = process.env.PORT || 3000;
 
 // Middlewares
@@ -32,6 +33,7 @@ app.use(
 app.use("/api/auth", authRoutes);
 app.use("/api/case-files", caseFilesRoutes);
 app.use("/api/payments", paymentsRoutes);
+app.use("/api/contacts", contactRoutes);
 
 // Inicializar servidor
 app.listen(PORT, () => {
