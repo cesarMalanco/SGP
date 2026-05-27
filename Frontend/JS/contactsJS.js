@@ -4,10 +4,23 @@ let contacts = [];
 let filteredContacts = [];
 let currentContactId = null;
 
+function getToken() {
+    let token = localStorage.getItem("token");
+    if (!token) {
+        token = sessionStorage.getItem("token");
+    }
+    return token;
+}
+
 // CARGAR CONTACTOS
 async function loadContacts() {
     try {
-        const response = await fetch(API_URL);
+        const response = await fetch(API_URL, {
+            headers: {
+                "Authorization": `Bearer ${getToken()}`
+            }
+        });
+
 
         if (!response.ok) {
             throw new Error("No se pudieron obtener contactos");
@@ -164,7 +177,8 @@ async function updateContact(){
         const response=await fetch(`${API_URL}/${currentContactId}`,{
             method:"PUT",
             headers:{
-                "Content-Type":"application/json"
+                "Content-Type":"application/json",
+                "Authorization": `Bearer ${getToken()}`
             },
             body: JSON.stringify(body)
         });
@@ -199,7 +213,8 @@ async function saveContact() {
         const response = await fetch(API_URL,{
             method:"POST",
             headers:{
-                "Content-Type":"application/json"
+                "Content-Type":"application/json",
+                "Authorization": `Bearer ${getToken()}`
             },
             body: JSON.stringify(body)
         });
@@ -222,8 +237,11 @@ async function deleteContact(id){
     try{
         const confirmar = confirm("¿Eliminar este contacto?");
         if(!confirmar)return;
-        const response = await fetch(`${API_URL}/${id}`,{
-            method:"DELETE"
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${getToken()}`
+            }
         });
         if(!response.ok){
             throw new Error();

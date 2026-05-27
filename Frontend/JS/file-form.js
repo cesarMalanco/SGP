@@ -123,11 +123,39 @@ async function guardarExpediente(event) {
 // CARGAR EXPEDIENTE PARA EDICIÓN
 async function cargarExpediente(id) {
     try {
-        const response = await fetch(`${API_URL}/${id}`);
-        const expediente = await response.json();
-        console.log(expediente);
+        const token = getToken();
 
-        // LLENAR FORMULARIO
+        if (!token) {
+            window.location.href = "../PAGES/login.html";
+            return;
+        }
+
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        if (response.status === 401) {
+            Toast.fire({
+                icon: "warning",
+                title: "Sesión expirada"
+            });
+
+            localStorage.clear();
+            sessionStorage.clear();
+
+            setTimeout(() => {
+                window.location.href = "../PAGES/login.html";
+            }, 1200);
+
+            return;
+        }
+
+        const expediente = await response.json();
+
+        console.log(expediente);
         document.getElementById("expNumero").value = expediente.case_number || "";
         document.getElementById("expInternalNumber").value = expediente.internal_number || "";
         document.getElementById("expJuzgado").value = expediente.court || "";
@@ -140,11 +168,16 @@ async function cargarExpediente(id) {
         document.getElementById("expLicActor").value = expediente.lic_actor || "";
         document.getElementById("expLicDemandado").value = expediente.lic_demandado || "";
         document.getElementById("expTotalCobro").value = expediente.total_fee || "";
-        document.getElementById("expFechaIngreso").value = expediente.entry_date ? expediente.entry_date.split("T")[0] : "";
+        document.getElementById("expFechaIngreso").value =
+            expediente.entry_date
+                ? expediente.entry_date.split("T")[0]
+                : "";
         document.getElementById("expTipoCliente").value = expediente.client_type || "";
         document.getElementById("expExpertRole").value = expediente.expert_role || "";
+
     } catch (error) {
         console.error(error);
+
         Toast.fire({
             icon: "error",
             title: "Error al cargar expediente"

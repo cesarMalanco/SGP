@@ -9,8 +9,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 async function cargarExpedientes() {
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
     try {
-        const response = await fetch(API_URL);
+        const response = await fetch(API_URL, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
         const data = await response.json();
         console.log(data);
 
@@ -20,8 +25,6 @@ async function cargarExpedientes() {
         } else {
             console.error(data);
         }
-
-        renderizarExpedientes();
 
     } catch (error) {
         console.error(error);

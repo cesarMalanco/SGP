@@ -342,7 +342,6 @@ function resetearModalACreacion() {
     document.getElementById("pagoForm").reset();
 }
 
-// CONFIGURACIÓN INICIAL 
 document.addEventListener("DOMContentLoaded", () => {
     if (!isAuthenticated()) return;
     
