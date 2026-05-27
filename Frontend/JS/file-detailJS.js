@@ -2,6 +2,8 @@ let currentExpediente = null;
 let expedienteId = null;
 let pagoEditandoId = null;
 
+let eventoEditandoId = null;
+
 const Toast = Swal.mixin({
     toast: true,
     position: "top-end",
@@ -197,6 +199,327 @@ async function cargarPagos() {
     }
 }
 
+async function cargarBitacora() {
+    try {
+        const logsRes = await fetch(`http://localhost:3000/api/logs/case/${expedienteId}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${getToken()}`
+                }
+            }
+        );
+
+        const logs = await logsRes.json();
+        const container = document.getElementById("bitacoraContainer");
+
+        container.innerHTML = "";
+        for (const log of logs) {
+            const pendRes = await fetch(`http://localhost:3000/api/pendings/log/${log.log_id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${getToken()}`
+                    }
+                }
+            );
+
+            const pendientes = await pendRes.json();
+            container.innerHTML += `
+                <tr>
+                    <td>
+                        ${new Date(log.date)
+                            .toLocaleDateString("es-MX")}
+                    </td>
+                    <td>
+                        ${log.action}
+                    </td>
+                    <td>
+                        ${pendientes.length ? pendientes.map(p => `<i class="fa-solid fa-caret-right"></i> ${p.description}`).join("<br>") : "-"}
+                    </td>
+                    <td>
+                        <button class="btn-edit-pago" onclick="abrirEditarEvento(${log.log_id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-delete-pago" onclick="eliminarEvento(${log.log_id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function guardarEvento(data){
+    const response = await fetch("http://localhost:3000/api/logs",{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json",
+                "Authorization":
+                `Bearer ${getToken()}`
+            },
+            body:JSON.stringify(data)
+        }
+    );
+
+    const result = await response.json();
+
+    if(!response.ok){
+        throw new Error(
+            result.error
+        );
+    }
+    return result;
+}
+
+async function guardarPendiente(data) {
+    const response = await fetch("http://localhost:3000/api/pendings",{
+        method: "POST",
+        headers: {
+            "Content-Type":
+            "application/json",
+            "Authorization":
+                `Bearer ${getToken()}`
+        },
+        body:
+            JSON.stringify(data)
+    });
+
+    const result = await response.json();
+    if (!response.ok) {
+        throw new Error(
+            result.error
+        );
+    }
+    return result;
+}
+
+async function actualizarPendiente(pendingId,data) {
+    const response = await fetch(`http://localhost:3000/api/pendings/${pendingId}`,{
+            method: "PUT",
+            headers: {
+                "Content-Type":
+                "application/json",
+            Authorization:
+                `Bearer ${getToken()}`
+            },
+
+            body:JSON.stringify(data)
+        }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok) {
+        throw new Error(result.error);
+    }
+    return result;
+}
+
+async function eliminarPendiente(pendingId) {
+    const response =await fetch(`http://localhost:3000/api/pendings/${pendingId}`,
+        {
+            method: "DELETE",
+            headers: {
+                Authorization:
+                `Bearer ${getToken()}`
+            }
+        }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok) {
+        throw new Error(
+            result.error
+        );
+    }
+    return result;
+}
+
+function actualizarBotonEliminarPrimerPendiente() {
+    const rows = document.querySelectorAll("#pendientesContainer .pendiente-row");
+    rows.forEach((row, index) => {
+        const btn = row.querySelector(".btn-remove-pendiente");
+        if (btn) {
+            btn.style.display = index === 0 ? "none" : "";
+        }
+    });
+}
+
+function agregarPendiente(showRemove = true) {
+    const container = document.getElementById("pendientesContainer");
+    const row = document.createElement("div");
+    row.className = "pendiente-row";
+    row.dataset.id = "";
+    row.innerHTML = `
+        <input type="text" class="form-control form-control-custom pendiente-input" placeholder="Agregar pendiente">
+        ${showRemove ? `<button type="button" class="btn-remove-pendiente">
+            <i class="fas fa-times"></i>
+        </button>` : ""}
+    `;
+
+    if (showRemove) {
+        row.querySelector(".btn-remove-pendiente").addEventListener("click", async () => {
+            const pendingId = row.dataset.id;
+            if (eventoEditandoId && pendingId) {
+                try {
+                    await eliminarPendiente(pendingId);
+                } catch (error) {
+                    console.error(error);
+                    Toast.fire({
+                        icon: "error",
+                        title: "Error al eliminar"
+                    });
+                    return;
+                }
+            }
+            row.remove();
+            actualizarBotonEliminarPrimerPendiente();
+        });
+    }
+
+    container.appendChild(row);
+    actualizarBotonEliminarPrimerPendiente();
+}
+
+async function eliminarEvento(logId) {
+    const confirmar = await Swal.fire({
+        title: "¿Eliminar evento?",
+        text: "También se eliminarán sus pendientes.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#7C3AED",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar"
+    });
+
+    if (!confirmar.isConfirmed) return;
+
+    try {
+        const response = await fetch(`http://localhost:3000/api/logs/${logId}`,
+            {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${getToken()}`
+                }
+            }
+        );
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error);
+        }
+
+        await cargarBitacora();
+
+        Toast.fire({
+            icon: "success",
+            title: "Evento eliminado"
+        });
+    } catch (error) {
+        console.error(error);
+        Toast.fire({
+            icon: "error",
+            title: "Error al eliminar"
+        });
+    }
+
+}
+
+async function abrirEditarEvento(logId) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/logs/${logId}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${getToken()}`
+                }
+            }
+        );
+        const log = await response.json();
+
+        // PENDIENTES
+        const pendientesRes = await fetch(`http://localhost:3000/api/pendings/log/${logId}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${getToken()}`
+                }
+            }
+        );
+        const pendientes = await pendientesRes.json();
+
+        eventoEditandoId = logId;
+        document.getElementById("bitacoraFecha").value = log.date?.split("T")[0];
+        document.getElementById("bitacoraEvento").value = log.action;
+
+        const container = document.getElementById("pendientesContainer");
+        container.innerHTML = "";
+
+
+        if (pendientes.length) {
+            pendientes.forEach(p => {
+                container.innerHTML += `
+                    <div class="pendiente-row" data-id="${p.pending_id}">
+                        <input type="text" value="${p.description}" class="form-control form-control-custom pendiente-input">
+                        <button type="button" class="btn-remove-pendiente">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
+            });
+            actualizarBotonEliminarPrimerPendiente();
+        } else {
+            agregarPendiente(false);
+        }
+
+        document.querySelector("#bitacoraModal .modal-title").innerHTML =`<i class="fas fa-edit"></i>Editar Evento`;
+        document.querySelector("#bitacoraForm button[type='submit']").textContent ="Actualizar Evento";
+        document.querySelectorAll(".btn-remove-pendiente").forEach(btn => {
+            btn.addEventListener("click", async () => {
+                const row = btn.closest(".pendiente-row");
+                const pendingId = row.dataset.id;
+                if (eventoEditandoId && pendingId) {
+                    const confirmar = await Swal.fire({
+                        title:"¿Eliminar pendiente?",
+                        icon:"warning",
+                        showCancelButton:true,
+                        confirmButtonColor:"#7C3AED"
+                    });
+                    if (!confirmar.isConfirmed) return;
+                    try {
+                        await eliminarPendiente(pendingId);
+                        row.remove();
+                        Toast.fire({
+                            icon:"success",
+                            title: "Pendiente eliminado"
+                        });
+                    } catch(error) {
+                        console.error(error);
+                        Toast.fire({
+                            icon:"error",
+                            title:"Error al eliminar"
+                        });
+                    }
+                } else {
+                    row.remove();
+                }
+                actualizarBotonEliminarPrimerPendiente();
+            });
+        });
+
+        new bootstrap.Modal(document.getElementById("bitacoraModal")).show();
+    }catch (error) {
+        console.error(error);
+        Toast.fire({
+            icon: "error",
+            title:
+            "Error al cargar evento"
+        });
+    }
+}
+
 // ABRIR MODAL PARA EDITAR PAGO 
 async function abrirModalEditarPago(paymentId) {
     try {
@@ -357,6 +680,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnEliminar = document.getElementById("btnEliminarExpediente");
     const btnAgregarPago = document.getElementById("btnAgregarPago");
     const btnEditar = document.getElementById("btnEditarExpediente");
+    const btnAgregarBitacora = document.getElementById("btnAgregarBitacora");
 
     const logoutBtn = document.querySelector(".logout");
     if (logoutBtn) {
@@ -386,6 +710,7 @@ document.addEventListener("DOMContentLoaded", () => {
             cargarInfoFinanciera();
             cargarInfoLegal();
             cargarPagos();
+            cargarBitacora();
         }
     }).catch(error => {
         console.error(error);
@@ -470,6 +795,86 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+document.getElementById("bitacoraForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        try {
+            const fecha = document.getElementById("bitacoraFecha").value;
+            const evento = document.getElementById("bitacoraEvento").value;
+            const pendientes = [...document.querySelectorAll(".pendiente-input")].map(input => input.value.trim()).filter(p => p);
+
+            // CREAR EVENTO
+            let log;
+
+            if (eventoEditandoId) {
+                await fetch(`http://localhost:3000/api/logs/${eventoEditandoId}`,
+                    {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${getToken()}`
+                        },
+                        body: JSON.stringify({
+                            date: fecha,
+                            action: evento
+                        })
+                    }
+                );
+            } else {
+                log = await guardarEvento({
+                    case_file_id: expedienteId,
+                    date: fecha,
+                    action: evento
+                });
+            }
+
+            // CREAR PENDIENTES
+            for (const input of document.querySelectorAll(
+                    ".pendiente-input"
+                )
+            ) {
+                const texto = input.value.trim();
+                if (!texto) continue;
+
+                const row = input.closest(".pendiente-row");
+                const pendingId = row.dataset.id;
+
+                if (eventoEditandoId && pendingId) {
+                    await actualizarPendiente(pendingId,{
+                        description:texto,
+                        date:fecha,
+                        completed:false
+                    });
+                } else {
+                    await guardarPendiente({
+                        log_id: eventoEditandoId || log.logId,
+                        description: texto,
+                        date: fecha
+                    });
+                }
+            }
+
+            bootstrap.Modal.getInstance(document.getElementById("bitacoraModal")).hide();
+
+            // LIMPIAR 
+            document.getElementById("bitacoraForm").reset();
+            document.getElementById("pendientesContainer").innerHTML = "";
+            agregarPendiente(false);
+
+            await cargarBitacora();
+
+            Toast.fire({
+                icon: "success",
+                title: "Evento guardado"
+            });
+        } catch (error) {
+            console.error(error);
+            Toast.fire({
+                icon: "error",
+                title: error.message
+            });
+        }
+    });
+
     if (btnEditar) {
         btnEditar.addEventListener("click", () => {
             window.location.href = `../PAGES/FILE-FORM.html?id=${expedienteId}`;
@@ -482,11 +887,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (btnAgregarPago) {
         btnAgregarPago.addEventListener("click", () => {
-            resetearModalACreacion();
-            const modal = new bootstrap.Modal(document.getElementById("pagoModal"));
-            modal.show();
+        resetearModalACreacion();
+        const modal = new bootstrap.Modal(document.getElementById("pagoModal"));
+        modal.show();
         });
     }
+
+    if (btnAgregarBitacora) {
+        btnAgregarBitacora.addEventListener("click", () => {
+            eventoEditandoId = null;
+            document.getElementById("bitacoraForm").reset();
+            document.querySelector("#bitacoraModal .modal-title").innerHTML =`<i class="fas fa-book"></i> Agregar Evento`;
+            document.querySelector("#bitacoraForm button[type='submit']").textContent = "Guardar Evento";
+            document.getElementById("pendientesContainer").innerHTML = "";
+            agregarPendiente(false);
+            new bootstrap.Modal(document.getElementById("bitacoraModal")).show();
+        });
+    }
+
 });
 
 // FUNCIONES EXISTENTES 

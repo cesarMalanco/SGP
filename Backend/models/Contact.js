@@ -3,8 +3,8 @@ const pool = require("../config/database");
 // OBJETO CONTACT 
 const Contact = {
     // Obtener todos los contactos
-async getAllContacts() {
-    const [rows] = await pool.query(`
+    async getAllContacts() {
+        const [rows] = await pool.query(`
         SELECT c.contact_id, c.name, c.address, c.phone, c.category,
         GROUP_CONCAT(DISTINCT ip.type SEPARATOR ', ') AS roles,
         GROUP_CONCAT(DISTINCT cf.internal_number SEPARATOR ', ') AS expedientes
@@ -57,13 +57,14 @@ async getAllContacts() {
 
     // Borrar contacto
     async deleteContact(contact_id) {
-        await pool.query("DELETE FROM contact WHERE contact_id = ?", [contact_id]);
+        await pool.query(`DELETE FROM case_contact WHERE contact_id = ?`, [contact_id]);
+        await pool.query(`DELETE FROM contact WHERE contact_id = ?`, [contact_id]);
         return contact_id;
     },
-
+    
     // Buscar contacto existente
     async findContact(name) {
-        const [rows] =await pool.query(
+        const [rows] = await pool.query(
             `
             SELECT *
             FROM contact
@@ -75,13 +76,13 @@ async getAllContacts() {
     },
 
     // Validar contacto antes de crear uno nuevo
-    async ensureContact({name, address=null,phone=null,category=null}) {
+    async ensureContact({ name, address = null, phone = null, category = null }) {
         const existing = await Contact.findContact(name);
-        if(existing){
+        if (existing) {
             return existing.contact_id;
         }
-        return await Contact.createContact({name,address,phone,category});
-        },
+        return await Contact.createContact({ name, address, phone, category });
+    },
 }
 
 //  EXPORTAR  

@@ -144,6 +144,34 @@
                 </div>
             </div>
 
+            <!-- BINNACLE -->
+            <div class="pagos-section">
+                <div class="pagos-header">
+                    <div class="pagos-title">
+                        <i class="fas fa-book-open"></i>
+                        <span>Bitácora del Expediente</span>
+                    </div>
+                    <button class="btn-add-pago" id="btnAgregarBitacora">
+                        <i class="fas fa-plus-circle"></i>
+                        Agregar Evento
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table class="pagos-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Evento</th>
+                                <th>Pendiente</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bitacoraContainer">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <!-- PAYMENTS TABLE -->
             <div class="pagos-section">
                 <div class="pagos-header">
@@ -188,15 +216,15 @@
     </main>
 
     <!-- MODAL TO EDIT/ADD -->
-    <div class="modal fade" id="pagoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade modal-custom" id="pagoModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content modal-content-custom">
-                <div class="modal-header-custom">
+                <div class="modal-header-custom modal-header">
                     <h5 class="modal-title" id="pagoModalTitle">
                         <i class="fas fa-plus-circle me-2"></i>
                         Agregar Pago
                     </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body-custom">
                     <form id="pagoForm">
@@ -254,6 +282,44 @@
                             <button type="submit" class="btn-save-pago">
                                 Guardar Pago
                             </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL BINNACLE -->
+    <div class="modal fade modal-custom" id="bitacoraModal"tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-content-custom">
+                <div class="modal-header-custom modal-header">
+                    <h5 class="modal-title"> <i class="fas fa-book"></i>Agregar Evento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body-custom">
+                    <form id="bitacoraForm">
+                        <div class="mb-3">
+                            <label class="form-label">Fecha</label>
+                            <input type="date" id="bitacoraFecha" class="form-control form-control-custom" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Evento</label>
+                            <textarea type="text" id="bitacoraEvento" rows="3" class="form-control form-control-custom" placeholder="Describe el evento" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Pendientes</label>
+                            <div id="pendientesContainer">
+                                <div class="pendiente-row">
+                                <input type="text" class="form-control form-control-custom pendiente-input" placeholder="Agregar pendiente">
+                                </div>
+                            </div>
+                            <button type="button" class="btn-add-pago mt-3" onclick="agregarPendiente()">
+                                <i class="fas fa-plus"></i> Agregar pendiente
+                            </button>
+                        </div>
+                        <div class="text-end">
+                            <button class="btn-save-pago" type="submit">Guardar Evento</button>
                         </div>
                     </form>
                 </div>

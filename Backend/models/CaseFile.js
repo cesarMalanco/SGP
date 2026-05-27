@@ -126,7 +126,7 @@ const Case_File = {
         remaining_balance,
         entry_date,
         client_type,
-        expert_role,	
+        expert_role,
     ) {
         const [result] = await pool.query(
             "INSERT INTO case_files (case_number, internal_number, court, title, trial_type, ruling_area, status, total_fee, remaining_balance, entry_date, client_type, expert_role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -187,28 +187,20 @@ const Case_File = {
         return case_file_id;
     },
 
-    // Borrar expediente y sus datos relacionados
+    // Borrar expediente
     async deleteCaseFile(case_file_id) {
-        // Borrar tareas de procedimientos ligadas a los logs del expediente
         await pool.query(
-            `DELETE FROM procedure_task WHERE log_id IN (SELECT log_id FROM log WHERE case_file_id = ?)`,
+            `DELETE FROM pending_item WHERE log_id IN (SELECT log_id FROM log WHERE case_file_id = ?)`,
             [case_file_id]
         );
 
-        // Borrar logs del expediente
         await pool.query(`DELETE FROM log WHERE case_file_id = ?`, [case_file_id]);
 
-        // Borrar pagos del expediente
         await pool.query(`DELETE FROM payment WHERE case_file_id = ?`, [case_file_id]);
 
-        // Borrar pendientes del expediente
-        await pool.query(`DELETE FROM pending_item WHERE case_file_id = ?`, [case_file_id]);
-
-        // Borrar relaciones expediente-contacto
         await pool.query(`DELETE FROM case_contact WHERE case_file_id = ?`, [case_file_id]);
-
-        // Finalmente borrar el expediente
-        await pool.query("DELETE FROM case_files WHERE case_file_id = ?", [case_file_id]);
+        
+        await pool.query(`DELETE FROM case_files WHERE case_file_id = ?`, [case_file_id]);
         return case_file_id;
     }
 }

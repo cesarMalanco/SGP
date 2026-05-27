@@ -5,7 +5,7 @@ const { authenticate } = require("../middlewares/authMiddleware");
 const caseFileController = require("../controllers/caseFiles.controller");
 
 // ===== MIDDLEWARE =====
-router.use(authenticate)
+//router.use(authenticate)
 
 // ===== RUTAS =====
 //Ruta para ver todos los expedientes
