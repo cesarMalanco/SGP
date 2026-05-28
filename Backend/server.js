@@ -9,10 +9,12 @@ const paymentsRoutes = require("./routes/payments.routes");
 const contactRoutes = require("./routes/contact.routes");
 const logRoutes = require("./routes/log.routes");
 const pendingRoutes = require("./routes/pendingItems.routes");
+const dashboardRoutes = require("./routes/dashboard.routes");
 const PORT = process.env.PORT || 3000;
 
 // Middlewares
 app.use(express.json());
+app.use("/api/dashboard", dashboardRoutes);
 
 const ALW_ORIGINS = process.env.ALLOWED_ORIGINS
 

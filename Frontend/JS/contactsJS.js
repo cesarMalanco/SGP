@@ -42,7 +42,6 @@ async function loadContacts() {
         renderContacts();
     } catch (error) {
         console.error(error);
-        alert("Error cargando contactos");
     }
 }
 
@@ -192,12 +191,22 @@ async function updateContact(){
         // volver a pedir datos 
         await loadContacts();
 
-    alert("Contacto actualizado");
+    Swal.fire({
+        icon: "success",
+        title: "Contacto actualizado",
+        text: "La información se guardó correctamente",
+        confirmButtonColor: "#7C3AED"
+    });
         }
 
         catch(error){
             console.error(error);
-            alert("No se pudo actualizar");
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "No se pudo actualizar el contacto",
+                confirmButtonColor: "#7C3AED"
+            });
         }
 }
 
@@ -226,17 +235,37 @@ async function saveContact() {
         bootstrap.Modal.getInstance(document.getElementById("addContactModal")).hide();
         document.getElementById("contactForm").reset();
         await loadContacts();
-        alert("Contacto agregado");
+        Swal.fire({
+            icon: "success",
+            title: "Contacto agregado",
+            text: "El nuevo contacto fue registrado",
+            confirmButtonColor: "#7C3AED"
+        });
     }catch(error){
         console.error(error);
-        alert("No se pudo guardar");
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "No se pudo guardar el contacto",
+            confirmButtonColor: "#7C3AED"
+        });
     }
 }
 
 async function deleteContact(id){
     try{
-        const confirmar = confirm("¿Eliminar este contacto?");
-        if(!confirmar)return;
+        const result = await Swal.fire({
+            title: "¿Eliminar contacto?",
+            text: "Esta acción no se puede deshacer",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#dc2626",
+            cancelButtonColor: "#64748b",
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar"
+        });
+
+        if (!result.isConfirmed) return;
         const response = await fetch(`${API_URL}/${id}`, {
             method: "DELETE",
             headers: {
@@ -247,10 +276,20 @@ async function deleteContact(id){
             throw new Error();
         }
         await loadContacts();
-        alert("Contacto eliminado");
+        Swal.fire({
+            icon: "success",
+            title: "Contacto eliminado",
+            text: "El contacto fue eliminado correctamente",
+            confirmButtonColor: "#7C3AED"
+        });
     }catch(error){
-    console.error(error);
-    alert("No se pudo eliminar");
+        console.error(error);
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "No se pudo eliminar el contacto",
+            confirmButtonColor: "#7C3AED"
+        });
     }
 
 }

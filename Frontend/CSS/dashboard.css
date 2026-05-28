@@ -31,10 +31,17 @@ body {
     overflow-x: hidden;
 }
 
+@font-face {
+    font-family: 'MedievalTitle';
+    src: url('../MEDIA/FONTS/OldLondon.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 /* ========== SIDEBAR ========== */
 .sidebar {
     width: 280px;
-    background: linear-gradient(180deg, #7609be 0%, #5e26b3 100%);
+    background: linear-gradient(180deg, #571773 0%, #682884 100%);
     backdrop-filter: blur(2px);
     border-radius: 0 32px 32px 0;
     box-shadow: 12px 0 28px -12px rgba(0, 0, 0, 0.2);
@@ -60,22 +67,20 @@ body {
 .logo-box {
     width: 48px;
     height: 48px;
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(212, 175, 55, 0.3);
 }
 
-.logo-box i {
-    font-size: 26px;
-    color: var(--pink-light);
+.logo-box img {
+    width: 5.5rem;
+    height: 5rem;
 }
 
 .brand-section h2 {
-    font-size: 1.6rem;
+    font-family: 'MedievalTitle', 'Playfair Display', serif;
+    font-size: 2.2rem;
     font-weight: 800;
     background: linear-gradient(135deg, #FFFFFF, #D9C8F2);
     -webkit-background-clip: text;
@@ -165,7 +170,7 @@ body {
 }
 
 .menu-card:hover, .menu-card.active {
-    background: #8B5CF6;
+    background: #8724b4;
     color: white;
     backdrop-filter: blur(8px);
     transform: translateX(4px);
@@ -454,9 +459,12 @@ body {
 
 /* ACTIVITY CARD */
 .activity-card, .calendar-preview {
+    height: 300px;
+    display: flex;
+    flex-direction: column;
     background: white;
     border-radius: 28px;
-    padding: 1.2rem 1.5rem;
+    padding: 1.5rem;
     box-shadow: var(--shadow-sm);
     border: 1px solid rgba(179, 157, 219, 0.2);
 }
@@ -487,6 +495,34 @@ body {
     gap: 15px;
     padding: 0.8rem 0;
     border-bottom: 1px solid #F0EBFA;
+}
+
+.activity-list,
+.upcoming-container{
+    overflow: hidden;
+    position: relative;
+    flex: 1;
+}
+
+.scroll-track{
+    display: flex;
+    flex-direction: column;
+    animation: scrollInfinite 20s linear infinite;
+}
+
+.scroll-track:hover{
+    animation-play-state: paused;
+}
+
+@keyframes scrollInfinite{
+
+    0%{
+        transform: translateY(0);
+    }
+
+    100%{
+        transform: translateY(-50%);
+    }
 }
 
 .activity-icon {

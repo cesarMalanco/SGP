@@ -45,7 +45,6 @@
     font-style: normal;
 }
 
-/* ===== BASE Y RESET ===== */
 * {
     margin: 0;
     padding: 0;
@@ -134,19 +133,16 @@ body {
 .logo-icon {
     width: 70px;
     height: 70px;
-    background: rgba(59, 130, 246, 0.15);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    backdrop-filter: blur(10px);
-    border: 2px solid var(--gold-light);
-    box-shadow: var(--shadow-gold);
 }
 
-.logo-icon i {
-    font-size: 32px;
-    color: var(--gold-light);
+.logo-icon img{
+    width:100px;
+    height:100px;
+    object-fit:contain;
 }
 
 .logo-text {

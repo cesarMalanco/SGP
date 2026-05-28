@@ -87,8 +87,6 @@ function actualizarResumenFinanciero() {
             <p>Total del Caso: <strong>$${total.toLocaleString("es-MX")}</strong></p>
             <p>Total Pagado: <strong class="text-success">$${pagado.toLocaleString("es-MX")}</strong></p>
             <p>Saldo Pendiente: <strong class="text-warning">$${restante.toLocaleString("es-MX")}</strong></p>
-            <hr style="margin: 10px 0; border-color: rgba(126, 87, 181, 0.2);">
-            <p style="font-size: 0.85rem;">Última actualización: ${new Date().toLocaleString("es-MX")}</p>
         </div>
     `;
 }
@@ -233,7 +231,7 @@ async function cargarBitacora() {
                         ${log.action}
                     </td>
                     <td>
-                        ${pendientes.length ? pendientes.map(p => `<i class="fa-solid fa-caret-right"></i> ${p.description}`).join("<br>") : "-"}
+                        ${pendientes.length ? pendientes.map(p => `<i class="fa-solid fa-caret-right"></i> ${p.description}`).join("<br>") : "Sin pendientes"}
                     </td>
                     <td>
                         <button class="btn-edit-pago" onclick="abrirEditarEvento(${log.log_id})">
@@ -534,7 +532,12 @@ async function abrirModalEditarPago(paymentId) {
         const pago = pagos.find(p => p.payment_id === paymentId);
         
         if (!pago) {
-            alert("No se encontró el pago");
+            Swal.fire({
+                icon: "info",
+                title: "Sin resultados",
+                text: "No se encontró el pago",
+                confirmButtonColor: "#7C3AED"
+            });
             return;
         }
         
@@ -563,7 +566,6 @@ async function abrirModalEditarPago(paymentId) {
         
     } catch (error) {
         console.error("Error al cargar pago para editar:", error);
-        alert("Error al cargar los datos del pago");
     }
 }
 
@@ -673,7 +675,6 @@ document.addEventListener("DOMContentLoaded", () => {
     
     if (!expedienteId) {
         console.error("No se proporcionó ID de expediente");
-        alert("Error: No se especificó el expediente");
         return;
     }
     

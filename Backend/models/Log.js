@@ -4,6 +4,16 @@ const pool = require("../config/database");
 // ===== OBJETO LOG =====
 const Log = {
 
+    // Obtener todos los logs
+    async getAllLogs() {
+        const [rows] = await pool.query(`
+            SELECT *
+            FROM log
+            ORDER BY date DESC
+        `);
+        return rows;
+    },
+
     // Obtener todos los eventos de la bitácora de un expediente
     async getLogsByCaseFile(case_file_id) {
         const [rows] = await pool.query(`

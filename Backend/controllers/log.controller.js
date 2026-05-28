@@ -13,6 +13,18 @@ exports.getLogsByCaseFile = async (req, res) => {
     }
 };
 
+// Obtener todos los eventos
+exports.getAllLogs = async (req, res) => {
+    try{
+        const logs = await Log.getAllLogs();
+        res.json(logs);
+    }catch(error){
+        res.status(500).json({
+            error:error.message
+        });
+    }
+};
+
 // Obtener un evento por ID
 exports.getLogById = async (req, res) => {
     try {

@@ -28,7 +28,12 @@ async function cargarExpedientes() {
 
     } catch (error) {
         console.error(error);
-        alert("Error al cargar expedientes");
+        Swal.fire({
+            icon: "info",
+            title: "Sin resultados",
+            text: "No se encontró el expediente",
+            confirmButtonColor: "#7C3AED"
+        });
     }
 }
 

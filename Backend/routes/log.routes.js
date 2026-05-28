@@ -8,6 +8,10 @@ const logController = require("../controllers/log.controller");
 router.use(authenticate);
 
 // ===== RUTAS =====
+
+// Obtener todos los eventos
+router.get("/", logController.getAllLogs);
+
 // Obtener todos los eventos de la bitácora de un expediente
 router.get("/case/:caseId", logController.getLogsByCaseFile);
 
