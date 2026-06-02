@@ -1,16 +1,16 @@
-function getToken(){
+function getToken() {
     return localStorage.getItem("token")
         || sessionStorage.getItem("token");
 }
 
-async function cargarDashboard(){
-    try{
+async function cargarDashboard() {
+    try {
         const headers = {
             Authorization: `Bearer ${getToken()}`
         };
 
         // ===== PETICIONES =====
-        const [pendingRes,filesRes,contactsRes,logsRes] = await Promise.all([
+        const [pendingRes, filesRes, contactsRes, logsRes] = await Promise.all([
             fetch("http://localhost:3000/api/pendings/agenda", { headers }),
             fetch("http://localhost:3000/api/case-files", { headers }),
             fetch("http://localhost:3000/api/contacts", { headers }),
@@ -39,7 +39,7 @@ async function cargarDashboard(){
         const activityList = document.getElementById("activityList");
         let activityHTML = "";
 
-        logs.sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0,5).forEach(log => {
+        logs.sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5).forEach(log => {
             activityHTML += `
                 <div class="activity-item">
                     <div class="activity-icon bg-soft-purple">
@@ -62,18 +62,17 @@ async function cargarDashboard(){
         activityList.innerHTML = `
             <div class="scroll-track">
                 ${activityHTML}
-                ${activityHTML}
             </div>
         `;
 
         const upcoming = document.getElementById("upcomingEvents");
         let upcomingHTML = "";
-        pendientes.sort((a,b)=>new Date(a.date) - new Date(b.date)).slice(0,5).forEach(p => {
+        pendientes.sort((a, b) => new Date(a.date) - new Date(b.date)).slice(0, 5).forEach(p => {
             const fecha = new Date(p.date);
             const dia = fecha.getDate();
             const mes = fecha.toLocaleDateString(
                 "es-MX",
-                { month:"short" }
+                { month: "short" }
             ).toUpperCase();
 
             upcomingHTML += `
@@ -98,28 +97,27 @@ async function cargarDashboard(){
             `;
         });
 
-    upcoming.innerHTML = `
+        upcoming.innerHTML = `
         <div class="scroll-track">
-            ${upcomingHTML}
             ${upcomingHTML}
         </div>
     `;
-    }catch(error){
+    } catch (error) {
         console.error(error);
         Swal.fire({
-            icon:"error",
-            title:"Error",
-            text:"No se pudo cargar el dashboard"
+            icon: "error",
+            title: "Error",
+            text: "No se pudo cargar el dashboard"
         });
     }
 }
 
-function formatearFecha(fecha){
+function formatearFecha(fecha) {
     const date = new Date(fecha);
-    return date.toLocaleDateString("es-MX",{
-        day:"numeric",
-        month:"long",
-        year:"numeric"
+    return date.toLocaleDateString("es-MX", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
     });
 }
 
