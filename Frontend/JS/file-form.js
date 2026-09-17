@@ -55,7 +55,7 @@ async function guardarExpediente(event) {
         lic_actor: document.getElementById("expLicActor").value,
         lic_demandado: document.getElementById("expLicDemandado").value,
         total_fee: parseFloat(document.getElementById("expTotalCobro").value) || 0,
-        entry_date: document.getElementById("expFechaIngreso").value,
+        entry_date: document.getElementById("expFechaIngreso").value || null,
         client_type: document.getElementById("expTipoCliente").value,
         expert_role: document.getElementById("expExpertRole").value
     };
